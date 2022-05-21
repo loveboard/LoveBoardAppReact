@@ -1,5 +1,9 @@
 /* required file for gridstack to work */
+/*
 @import "https://cdnjs.cloudflare.com/ajax/libs/gridstack.js/5.0.0/gridstack.min.css";
+*/
+@import "gridstack/dist/gridstack.css";
+@import "gridstack/dist/gridstack-extra.css";
 
 @import url("https://fonts.googleapis.com/css?family=Baloo+Da&display=swap");
 :root {

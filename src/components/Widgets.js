@@ -15,14 +15,6 @@ export const WIDGETS = {
     ),
     label: "Photo",
   },
-  photo2: {
-    component: () => (
-      <div style={{ textAlign: "center" }}>
-        <img src="https://placeimg.com/100/100/animals" alt="michi" />
-      </div>
-    ),
-    label: "Photo2",
-  },
   photo3: {
     component: () => (
       <div style={{ textAlign: "center" }}>
