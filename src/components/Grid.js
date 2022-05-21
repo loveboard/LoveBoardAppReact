@@ -4,10 +4,10 @@ import { useRef, useEffect } from "react";
 import GridStack from "gridstack/dist/gridstack-jq";
 
 //import "gridstack/dist/gridstack-jq";
-//import "gridstack/dist/gridstack.css";
+import "gridstack/dist/gridstack.css";
 
-// import "./styles.scss";
-import "./demo.css";
+import "./Grid.styles.scss";
+import "./Grid.css";
 
 const Item = ({ id }) => <div>I am item: {id}</div>;
 
@@ -15,26 +15,7 @@ let id = 1;
 export default function Grid({ children, setWidgets }) {
   const refs = useRef({});
   const gridRef = useRef();
-  /*
-  
-      column: 6, // will auto switch on smaller screens
-      row: GridRows,
-      disableOneColumnMode: true,
-      float: true,
-      acceptWidgets: true,
-      resizable: { handles: "e, se, s, sw, w" },
-      //draggable:{handle:'.drag-handle'},
-      removable: true,
-      staticGrid: false,
-      cellHeight: UltimateCellHeight, // start square but will set to % of window width later
-      cellWidth:"initial",
-      //cellHeightUnit: "px",
-      //cellHeight: 70, // make sure we have a decent height and not width/12 for 1 column
-      alwaysShowResizeHandle: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
-        navigator.userAgent
-      )
-  
-  */
+
   useEffect(() => {
     gridRef.current = GridStack.init({
       column: 6, // will auto switch on smaller screens
@@ -53,8 +34,8 @@ export default function Grid({ children, setWidgets }) {
         navigator.userAgent
       ),
 
-      //cellHeight: 'auto',
-      cellHeight: 70,
+      cellHeight: 'auto',
+      //cellHeight: 70,
       minRow: 4, // don't collapse when empty
       margin: 4,
       resizable: {
@@ -71,8 +52,7 @@ export default function Grid({ children, setWidgets }) {
       //row: 10,
       //cellHeight: "auto", // start square but will set to % of window width later
       //cellWidth:"initial",
-
-    }, '#stacker');
+    });
 
     const grid = gridRef.current;
     grid.load([
@@ -119,13 +99,15 @@ export default function Grid({ children, setWidgets }) {
   };
 
   return (
+    <section>
 
-      <div id="stacker" className="grid-stack nomelacontainer">
+      <div id="stacker" className="grid-stack">
         {children({
           handleAdd,
           handleRemove,
           handleEnableMove,
         })}
       </div>
+    </section>
   );
 }

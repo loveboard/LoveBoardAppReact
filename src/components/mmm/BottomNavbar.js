@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import anime from "animejs/lib/anime.es.js";
 
 import "./BottomNavbar.css";
@@ -11,7 +13,10 @@ let moveY = 0;
 let open = false;
 
 const vh = window.innerHeight * 0.01;
-document.documentElement.style.setProperty("--vh", `${vh}px`);
+var vhx = vh + "px";
+document.documentElement.style.setProperty("--vh", vhx);
+
+/*
 setTimeout(function () {
   window.scrollTo(0, 1);
 }, 0);
@@ -73,10 +78,11 @@ window.addEventListener("touchmove", (evt) => {
     });
   }
 });
+*/
 
-console.log("buttons: ",buttons)
+console.log("buttons: ", buttons);
 buttons.forEach((item) => {
-  console.log("item: ",item)
+  console.log("item: ", item);
   item.addEventListener("click", (evt) => {
     const x = evt.target.offsetLeft;
     buttons.forEach((btn) => {
@@ -113,6 +119,48 @@ function handleClickPlusClose(evt) {
 }
 
 export default function Navbar({ children }) {
+  useEffect(() => {
+    /**
+     * minimize when chose an item to drop in the grid
+     */
+
+    var e = document.getElementById("stacker");
+    console.log("e", e);
+    var observer = new MutationObserver(function (event) {
+      console.log(event);
+      var classes = event[0].target.classList;
+      console.log("classes", classes);
+      if (classes.contains("ui-droppable-active")) {
+        anime({
+          targets: ".container",
+          translateY: `0px`,
+          duration: 600,
+          easing: "easeOutExpo",
+        });
+        open = false;
+      } else {
+        console.log("no newWidget class");
+      }
+      // ui-droppable-active
+    });
+
+    observer.observe(e, {
+      attributes: true,
+      attributeFilter: ["class"],
+      childList: false,
+      characterData: false,
+    });
+
+    /*
+    event Chrome api
+      Component Grid
+        emit event
+      Component Navbar
+        listen event
+
+    */
+  }, []);
+
   return (
     <div>
       <div className="bottom-navbar">
@@ -136,11 +184,15 @@ export default function Navbar({ children }) {
         </button>
       </div>
       <div className="container">
-        <img src="/pc.png" alt=""></img>
-        <p>Your food instantly at your home, faster food tastier food</p>
-        <button onClick={handleClickPlusClose}>Buy food</button>
-        {children}
+        <button onClick={handleClickPlusClose}>
+          <i className="bx bx-x bx-sm"></i>
+        </button>
+        <p>Chose the media option to insert</p>
+        {/*
         <button onClick={handleClickPlusClose}>Close</button>
+        */}
+
+        {children}
       </div>
     </div>
   );
