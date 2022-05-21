@@ -1,24 +1,27 @@
+/*
+<div style={{ textAlign: "center" }}>
+</div>
+*/
+
+
 export const WIDGETS = {
   grid: {
     component: () => <div style={{ textAlign: "center" }}>GRID</div>,
     label: "Grid",
   },
   chart: {
-    component: () => <div className="grid-stack-item-content">CHART</div>,
+    component: () => <div>CHART</div>,
     label: "Chart",
   },
   photo: {
     component: () => (
-      <div style={{ textAlign: "center" }}>
-        <img src="https://placeimg.com/100/100/animals" alt="michi" />
-      </div>
+        <img src="https://placeimg.com/100/100/animals" alt="michi" className="contain"/>
     ),
     label: "Photo",
   },
   video: {
     component: () => (
-      <div style={{ textAlign: "center" }}>
-        <div className="grid-stack-item-content" style={{ padding: "0px" }}>
+        <div style={{ padding: "0px" }}  className="contain">
           <iframe
             width="100%"
             height="100%"
@@ -26,17 +29,18 @@ export const WIDGETS = {
             title="YouTube video player"
           ></iframe>
         </div>
-      </div>
     ),
     label: "Video",
-  }
+  },
 };
-{/*
+{
+  /*
 frameborder="0" 
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowfullscreen
 
-*/}
+*/
+}
 import "./Widgets.css";
 
 export default function Widgets() {
@@ -52,10 +56,11 @@ export default function Widgets() {
         >
           <div className="grid-stack-item-content">
             <div>
+              {value.label}
               {/*
               <span>Let me in, Im a photo</span>      
-              */}
-              {value.label}
+            
+              {value.label}    */}
             </div>
           </div>
         </div>

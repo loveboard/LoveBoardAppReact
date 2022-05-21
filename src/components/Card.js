@@ -1,5 +1,27 @@
 import { useEffect, useRef, useState } from "react";
 
+import "./Card.css";
+
+export const onDoubleTap = function(el, handler) {
+  const MAX_TIME_TO_SECOND_TAP = 300 // espera máximo 300ms al siguiente click/tap
+  let lastTapTimestamp = 0;
+  el.addEventListener('touchstart', function() {
+    lastTapTimestamp = new Date().getTime();
+  });
+  el.addEventListener('touchend', function(event) {
+      var currentTime = new Date().getTime();
+      var tapEllapsedTime = currentTime - lastTapTimestamp;
+
+      // si se ha hecho el segundo tap/click entre los 300ms
+      if (tapEllapsedTime < MAX_TIME_TO_SECOND_TAP && tapEllapsedTime > 0) {
+          event.preventDefault();
+          lastTapTimestamp = 0; // reinicia el counter
+          handler(event); // ejecuta el handler
+      }
+  });
+};
+
+
 export default function Card({
   id,
   title: initialTitle,
@@ -37,6 +59,8 @@ export default function Card({
       gs-y={y}
     >
       <div className="grid-stack-item-content">
+        {children}
+        {/*
         <header>
           {toggle ? (
             <h2
@@ -71,7 +95,7 @@ export default function Card({
             &#x2715;
           </button>
         </header>
-        {children}
+         */}
       </div>
     </div>
   );
