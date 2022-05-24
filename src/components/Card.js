@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
+import onLongpress from "./../scripts/cardsActions";
 import "./Card.css";
 
 export const onDoubleTap = function(el, handler) {
@@ -21,6 +22,23 @@ export const onDoubleTap = function(el, handler) {
   });
 };
 
+/*
+taphold | long press
+
+https://interactjs.io/
+https://jsfiddle.net/kelunik/pkjze6e6/42/
+https://stackoverflow.com/questions/2625210/long-press-in-javascript
+https://www.w3schools.com/jquerymobile/tryit.asp?filename=tryjqmob_events_taphold
+https://stackoverflow.com/questions/41329964/click-and-hold-onto-a-selected-div-to-hide
+https://www.npmjs.com/package/long-press-event
+
+
+https://codepen.io/allurewebsolutions/pen/YqJyYY
+https://codepen.io/borntofrappe/pen/jOEKERG
+
+
+*/
+
 
 export default function Card({
   id,
@@ -41,12 +59,20 @@ export default function Card({
   useEffect(() => {
     actions.handleRemove(ref.current, false);
     actions.handleAdd(ref.current);
+
+    onLongpress(ref.current)
   }, []);
 
   const handleToggle = (flag) => {
     setToggle(flag);
     actions.handleEnableMove(flag);
   };
+  const handleTapHold = (flag) => {
+    //setToggle(flag);
+    //actions.handleEnableMove(flag);
+    console.log("handleTapHold")
+  };
+
 
   return (
     <div
