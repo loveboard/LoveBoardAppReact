@@ -1,6 +1,4 @@
-
 import "./cardsActions.css";
-
 /*
 taphold | long press
 
@@ -45,7 +43,7 @@ var click = function(e) {
 };
 
 var start = function(e) {
-    console.log(e);
+    //console.log(e);
     
     if (e.type === "click" && e.button !== 0) {
         return;
@@ -71,128 +69,152 @@ node.addEventListener("touchend", cancel);
 node.addEventListener("touchleave", cancel);
 node.addEventListener("touchcancel", cancel);
 */
+var pointerX = -1;
+var pointerY = -1;
+/*
+document.addEventListener("DOMContentLoaded", function (event) {
+  //we ready baby
+  //https://www.codegrepper.com/code-examples/javascript/get+cursor+position+javascript
 
 
+  onmousemove = function(e){
+      //console.log("mouse location:", e.clientX, e.clientY);
+      pointerX = event.clientX;
+      pointerY = event.clientY;
+    }
+});
+*/
+//https://stackoverflow.com/questions/7790725/javascript-track-mouse-position
+function tellPos(e) {
+  //console.log("Position X : " + e.pageX + "<br />Position Y : " + e.pageY);
+  //console.log("mouse location:", e.clientX, e.clientY);
+  pointerX = e.clientX;
+  pointerY = e.clientY;
+}
 
+document.addEventListener("mousemove", tellPos, false);
 
+export default function onLongpress(el, handler) {
+  //var node = document.getElementsByTagName("p")[0];
+  const MAX_TIME_TO_BE_LONG = 1000; // espera máximo 1000ms (1 seg) al siguiente click/tap
 
+  var longpress = false;
+  var presstimer = null;
+  var longtarget = null;
 
+  // https://stackoverflow.com/questions/442404/retrieve-the-position-x-y-of-an-html-element
+  // https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
+  //var bodyRect = document.body.getBoundingClientRect(), elemRect = el.getBoundingClientRect(), offset   = elemRect.top - bodyRect.top;
 
-export default function  onLongpress(el, handler) {
-    //var node = document.getElementsByTagName("p")[0];
-    const MAX_TIME_TO_BE_LONG = 1000 // espera máximo 1000ms (1 seg) al siguiente click/tap
+  //const elemRectY = el.getBoundingClientRect().y; // before elemRectTop
+  //const elemRectX = el.getBoundingClientRect().x; // before elemRectLeft
+  //alert('Element is ' + offset + ' vertical pixels from <body>');
+  //console.log('Element is ' + offset + ' vertical pixels from <body>');
 
-    var longpress = false;
-    var presstimer = null;
-    var longtarget = null;
+  function clearStyle(presstimer, element) {
+    clearTimeout(presstimer);
+    presstimer = null;
+    element.classList.remove("longpress");
+  }
 
-    // https://stackoverflow.com/questions/442404/retrieve-the-position-x-y-of-an-html-element
-    // https://developer.mozilla.org/en-US/docs/Web/API/Element/getBoundingClientRect
-    //var bodyRect = document.body.getBoundingClientRect(), elemRect = el.getBoundingClientRect(), offset   = elemRect.top - bodyRect.top;
-
-    //const elemRectY = el.getBoundingClientRect().y; // before elemRectTop
-    //const elemRectX = el.getBoundingClientRect().x; // before elemRectLeft
-    //alert('Element is ' + offset + ' vertical pixels from <body>');
-    //console.log('Element is ' + offset + ' vertical pixels from <body>');
-
-    function clearStyle(presstimer,element) {
-        
-        clearTimeout(presstimer);
-        presstimer = null;
-        element.classList.remove("longpress");
+  var cancel = function (e) {
+    if (presstimer !== null) {
+      clearTimeout(presstimer);
+      presstimer = null;
     }
 
+    this.classList.remove("longpress");
+  };
 
-    var cancel = function(e) {
-        if (presstimer !== null) {
-            clearTimeout(presstimer);
-            presstimer = null;
-        }
-        
-        this.classList.remove("longpress");
-    };
-    
-    var click = function(e) {
-        if (presstimer !== null) {
-            clearTimeout(presstimer);
-            presstimer = null;
-        }
-        
-        this.classList.remove("longpress");
-        
-        if (longpress) {
-            return false;
-        }
-        
-        //alert("press");
-        console.log("press");
-    };
-    
-    var start = function(e) {
-        console.log('Element is moving ' + el.getBoundingClientRect().top + ' vertical pixels');
+  var click = function (e) {
+    if (presstimer !== null) {
+      clearTimeout(presstimer);
+      presstimer = null;
+    }
 
+    this.classList.remove("longpress");
 
+    if (longpress) {
+      return false;
+    }
 
-        
-        console.log(e);
-        
-        if (e.type === "click" && e.button !== 0) {
-            return;
-        }
-        
-        longpress = false;
-        
-        this.classList.add("longpress");
-        
+    //alert("press");
+    //console.log("press");
+  };
 
+  /**
+   * todo 🚀
+   * check if mouse move
+   * check div height and width
+   */
 
+  var start = function (e) {
+    console.log(
+      "Element is moving " + el.getBoundingClientRect().top + " vertical pixels"
+    );
 
-        const elemRectY = el.getBoundingClientRect().y; // before elemRectTop
-        const elemRectX = el.getBoundingClientRect().x; // before elemRectLeft
+    //console.log(e);
 
+    if (e.type === "click" && e.button !== 0) {
+      return;
+    }
 
-        presstimer = setTimeout(function() {
-            console.log("New tap")
-            var elemRectYNow = el.getBoundingClientRect().y;
-            var elemRectXNow = el.getBoundingClientRect().x;
-            console.log("elemRectY",elemRectY)
-            console.log("elemRectYNow",elemRectYNow)
-            console.log("elemRectX",elemRectX)
-            console.log("elemRectXNow",elemRectXNow)
-            if (elemRectY != elemRectYNow || elemRectX != elemRectXNow) {
-                //alert("is different");
-                console.log("is different");
-                //var self = this;
-                clearStyle(presstimer,el);
-                
-            } else {
-                //alert("is not different");
-                //alert("long click");
-                console.log("long click");
-                el.classList.add("itemselected");
-                
-            }
-            longpress = true;
-        }, MAX_TIME_TO_BE_LONG);
-        
-        return false;
-    };
-    
-    el.addEventListener("mousedown", start);
-    el.addEventListener("touchstart", start);
-    el.addEventListener("click", click);
-    el.addEventListener("mouseout", cancel);
-    el.addEventListener("touchend", cancel);
-    el.addEventListener("touchleave", cancel);
-    el.addEventListener("touchcancel", cancel);
+    longpress = false;
 
+    this.classList.add("longpress");
 
+    const elemRectY = el.getBoundingClientRect().y; // before elemRectTop
+    const elemRectX = el.getBoundingClientRect().x; // before elemRectLeft
+    const pointerRectY = pointerY;
+    const pointerRectX = pointerX;
 
+    presstimer = setTimeout(function () {
+      //console.log("New tap");
+      var elemRectYNow = el.getBoundingClientRect().y;
+      var elemRectXNow = el.getBoundingClientRect().x;
 
+      var pointerRectYNow = pointerY;
+      var pointerRectXNow = pointerX;
 
+      //console.log("elemRectY", elemRectY);
+      //console.log("elemRectYNow", elemRectYNow);
+      //console.log("elemRectX", elemRectX);
+      //console.log("elemRectXNow", elemRectXNow);
 
+      //console.log("pointerRectY", pointerRectY);
+      //console.log("pointerRectYNow", pointerRectYNow);
+      //console.log("pointerRectX", pointerRectX);
+      //console.log("pointerRectXNow", pointerRectXNow);
+      if (
+        (elemRectY != elemRectYNow || elemRectX != elemRectXNow) &&
+        (pointerRectY != pointerRectYNow || pointerRectX != pointerRectXNow)
+      ) {
+        //alert("is different");
+        //console.log("is different");
+        //var self = this;
+        clearStyle(presstimer, el);
+      } else {
+        //alert("is not different");
+        //alert("long click");
+        console.log("is not different");
+        el.classList.add("itemselected");
+        handler(el); // ejecuta el handler
+      }
+      longpress = true;
+    }, MAX_TIME_TO_BE_LONG);
 
-    /*
+    return false;
+  };
+
+  el.addEventListener("mousedown", start);
+  el.addEventListener("touchstart", start);
+  el.addEventListener("click", click);
+  el.addEventListener("mouseout", cancel);
+  el.addEventListener("touchend", cancel);
+  el.addEventListener("touchleave", cancel);
+  el.addEventListener("touchcancel", cancel);
+
+  /*
     const MAX_TIME_TO_SECOND_TAP = 300 // espera máximo 300ms al siguiente click/tap
     let lastTapTimestamp = 0;
     el.addEventListener('touchstart', function() {
@@ -210,4 +232,4 @@ export default function  onLongpress(el, handler) {
         }
     });
     */
-  };
+}

@@ -30,6 +30,10 @@ p {
   }
 }
 
+/*
+Rainbow Selection
+https://gist.github.com/ajaegers/52a82619cc191f898ec4
+*/
 .itemselected {
   -webkit-animation: rainbow 4s steps(36) infinite;
 }

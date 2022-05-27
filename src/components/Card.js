@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react";
 
 import onLongpress from "./../scripts/cardsActions";
 import "./Card.css";
-
+import EditToolbar from "./subcomponents/editToolbar/EditToolbar";
+/*
 export const onDoubleTap = function(el, handler) {
   const MAX_TIME_TO_SECOND_TAP = 300 // espera máximo 300ms al siguiente click/tap
   let lastTapTimestamp = 0;
@@ -21,6 +22,7 @@ export const onDoubleTap = function(el, handler) {
       }
   });
 };
+*/
 
 /*
 taphold | long press
@@ -39,7 +41,6 @@ https://codepen.io/borntofrappe/pen/jOEKERG
 
 */
 
-
 export default function Card({
   id,
   title: initialTitle,
@@ -48,19 +49,29 @@ export default function Card({
   x,
   y,
   actions,
-  children
+  children,
 }) {
-  const ref = useRef(null);
+  const cardRef = useRef(null);
   const [toggle, setToggle] = useState(true);
   const [title, setTitle] = useState(
     initialTitle || "Double click to change title"
   );
+  const [visible, setVisible] = useState(true);
+  const [editable, setEditable] = useState(false);
 
   useEffect(() => {
-    actions.handleRemove(ref.current, false);
-    actions.handleAdd(ref.current);
+    actions.handleRemove(cardRef.current, false);
+    actions.handleAdd(cardRef.current);
 
-    onLongpress(ref.current)
+    onLongpress(cardRef.current,handleEditCard);
+
+    //https://www.codegrepper.com/code-examples/javascript/get+cursor+position+javascript
+    var pointerX = -1;
+    var pointerY = -1;
+    document.onmousemove = function (event) {
+      pointerX = event.pageX;
+      pointerY = event.pageY;
+    };
   }, []);
 
   const handleToggle = (flag) => {
@@ -70,13 +81,56 @@ export default function Card({
   const handleTapHold = (flag) => {
     //setToggle(flag);
     //actions.handleEnableMove(flag);
-    console.log("handleTapHold")
+    console.log("handleTapHold");
+  };
+  /*
+  var changeName = () => {
+    console.log("changeName");
+  };
+  function changeName(evt) {
+    console.log("changeName", evt);
+  }
+*/
+  const changeName = (evt) => {
+    console.log("changeName", evt);
+  };
+
+  const backCard = (evt) => {
+    console.log("backCard", evt);
+    setEditable(false);
+    //cardRef.current.classList.remove("longpress");
+    cardRef.current.classList.remove('longpress');
+    cardRef.current.classList.remove("itemselected");
+    //cardRef.current.class.remove('longpress');
+    //cardRef.current.className.remove('longpress');
+    //console.log("cardRef.current", cardRef.current);
+    //console.log("cardRef", cardRef);
+
+
+    //document.getElementById(id).classlist.remove('longpress');
+    //cardRef.classList.remove('longpress');
+    //cardRef.current.classList.add("longpress2");
+  };
+  const editCard = (evt) => {
+    console.log("editCard", evt);
+  };
+  const handleEditCard = (flag) => {
+    setEditable(true);
+    console.log("handleEditCard", flag);
   };
 
 
-  return (
+  const delCard = (evt) => {
+    console.log("delCard", evt);
+    //gridRef.current.removeWidget(el, false);
+    actions.handleRemove(cardRef.current, false);
+    //this.props.unmountMe();
+    //ReactDOM.unmountComponentAtNode(ref.current);
+    setVisible(false);
+  };
+  return visible ? (
     <div
-      ref={ref}
+      ref={cardRef}
       id={`${id}`} // convert to string
       className="grid-stack-item"
       gs-w={w}
@@ -84,7 +138,11 @@ export default function Card({
       gs-x={x}
       gs-y={y}
     >
+      {/**
+       * Toolbar
+       */}
       <div className="grid-stack-item-content">
+        {editable ? (<EditToolbar className="" delCard={delCard} editCard={editCard} backCard={backCard} ></EditToolbar>):(<div/>)}
         {children}
         {/*
         <header>
@@ -115,7 +173,7 @@ export default function Card({
           <button
             title="Delete widget"
             onClick={() => {
-              actions.handleRemove(ref.current);
+              actions.handleRemove(cardRef.current);
             }}
           >
             &#x2715;
@@ -124,5 +182,7 @@ export default function Card({
          */}
       </div>
     </div>
+  ) : (
+    <div />
   );
 }
