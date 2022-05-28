@@ -1,28 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 
-import onLongpress from "./../scripts/cardsActions";
+// import LongPress from "./../scripts/LongPress";
+import interact from 'interactjs'
+
+// https://github.com/taye/interact.js/issues/214
+// interact.debug().defaultOptions._holdDuration = 1500;
+
+
 import "./Card.css";
 import EditToolbar from "./subcomponents/editToolbar/EditToolbar";
-/*
-export const onDoubleTap = function(el, handler) {
-  const MAX_TIME_TO_SECOND_TAP = 300 // espera máximo 300ms al siguiente click/tap
-  let lastTapTimestamp = 0;
-  el.addEventListener('touchstart', function() {
-    lastTapTimestamp = new Date().getTime();
-  });
-  el.addEventListener('touchend', function(event) {
-      var currentTime = new Date().getTime();
-      var tapEllapsedTime = currentTime - lastTapTimestamp;
-
-      // si se ha hecho el segundo tap/click entre los 300ms
-      if (tapEllapsedTime < MAX_TIME_TO_SECOND_TAP && tapEllapsedTime > 0) {
-          event.preventDefault();
-          lastTapTimestamp = 0; // reinicia el counter
-          handler(event); // ejecuta el handler
-      }
-  });
-};
-*/
 
 /*
 taphold | long press
@@ -63,15 +49,38 @@ export default function Card({
     actions.handleRemove(cardRef.current, false);
     actions.handleAdd(cardRef.current);
 
-    onLongpress(cardRef.current,handleEditCard);
+    //onLongpress(cardRef.current, handleEditCard);
 
     //https://www.codegrepper.com/code-examples/javascript/get+cursor+position+javascript
+    /*
     var pointerX = -1;
     var pointerY = -1;
     document.onmousemove = function (event) {
       pointerX = event.pageX;
       pointerY = event.pageY;
     };
+    */
+    interact(cardRef.current)
+    .on('tap', function (event) {
+      console.log("tap", event);
+      // event.currentTarget.classList.toggle('switch-bg')
+      event.preventDefault()
+    })
+    .on('doubletap', function (event) {
+      console.log("doubletap", event);
+      // event.currentTarget.classList.toggle('large')
+      // event.currentTarget.classList.remove('rotate')
+      event.preventDefault()
+    })
+    .on('hold', function (event) {
+      console.log("hold", event);
+      setEditable(true);
+      // event.currentTarget.classList.toggle('rotate')
+      // event.currentTarget.classList.remove('large')
+    })
+
+
+
   }, []);
 
   const handleToggle = (flag) => {
@@ -83,14 +92,7 @@ export default function Card({
     //actions.handleEnableMove(flag);
     console.log("handleTapHold");
   };
-  /*
-  var changeName = () => {
-    console.log("changeName");
-  };
-  function changeName(evt) {
-    console.log("changeName", evt);
-  }
-*/
+
   const changeName = (evt) => {
     console.log("changeName", evt);
   };
@@ -99,13 +101,12 @@ export default function Card({
     console.log("backCard", evt);
     setEditable(false);
     //cardRef.current.classList.remove("longpress");
-    cardRef.current.classList.remove('longpress');
+    cardRef.current.classList.remove("longpress");
     cardRef.current.classList.remove("itemselected");
     //cardRef.current.class.remove('longpress');
     //cardRef.current.className.remove('longpress');
     //console.log("cardRef.current", cardRef.current);
     //console.log("cardRef", cardRef);
-
 
     //document.getElementById(id).classlist.remove('longpress');
     //cardRef.classList.remove('longpress');
@@ -119,7 +120,6 @@ export default function Card({
     console.log("handleEditCard", flag);
   };
 
-
   const delCard = (evt) => {
     console.log("delCard", evt);
     //gridRef.current.removeWidget(el, false);
@@ -128,6 +128,7 @@ export default function Card({
     //ReactDOM.unmountComponentAtNode(ref.current);
     setVisible(false);
   };
+
   return visible ? (
     <div
       ref={cardRef}
@@ -141,8 +142,18 @@ export default function Card({
       {/**
        * Toolbar
        */}
+
       <div className="grid-stack-item-content">
-        {editable ? (<EditToolbar className="" delCard={delCard} editCard={editCard} backCard={backCard} ></EditToolbar>):(<div/>)}
+        {editable ? (
+          <EditToolbar
+            className=""
+            delCard={delCard}
+            editCard={editCard}
+            backCard={backCard}
+          ></EditToolbar>
+        ) : (
+          <div />
+        )}
         {children}
         {/*
         <header>

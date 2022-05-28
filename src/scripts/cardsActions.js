@@ -118,15 +118,16 @@ export default function onLongpress(el, handler) {
   }
 
   var cancel = function (e) {
+    console.log("cancel ---------------------------------------------------------------");
     if (presstimer !== null) {
       clearTimeout(presstimer);
       presstimer = null;
     }
-
     this.classList.remove("longpress");
   };
 
   var click = function (e) {
+    console.log("click ---------------------------------------------------------------");
     if (presstimer !== null) {
       clearTimeout(presstimer);
       presstimer = null;
@@ -139,7 +140,7 @@ export default function onLongpress(el, handler) {
     }
 
     //alert("press");
-    //console.log("press");
+    console.log("press ---------------------------------------------------------------");
   };
 
   /**
@@ -149,6 +150,7 @@ export default function onLongpress(el, handler) {
    */
 
   var start = function (e) {
+    console.log("start ---------------------------------------------------------------");
     console.log(
       "Element is moving " + el.getBoundingClientRect().top + " vertical pixels"
     );
@@ -169,25 +171,25 @@ export default function onLongpress(el, handler) {
     const pointerRectX = pointerX;
 
     presstimer = setTimeout(function () {
-      //console.log("New tap");
+      console.log("New tap");
       var elemRectYNow = el.getBoundingClientRect().y;
       var elemRectXNow = el.getBoundingClientRect().x;
 
       var pointerRectYNow = pointerY;
       var pointerRectXNow = pointerX;
 
-      //console.log("elemRectY", elemRectY);
-      //console.log("elemRectYNow", elemRectYNow);
-      //console.log("elemRectX", elemRectX);
-      //console.log("elemRectXNow", elemRectXNow);
+      console.log("elemRectY", elemRectY);
+      console.log("elemRectYNow", elemRectYNow);
+      console.log("elemRectX", elemRectX);
+      console.log("elemRectXNow", elemRectXNow);
 
-      //console.log("pointerRectY", pointerRectY);
-      //console.log("pointerRectYNow", pointerRectYNow);
-      //console.log("pointerRectX", pointerRectX);
-      //console.log("pointerRectXNow", pointerRectXNow);
+      console.log("pointerRectY", pointerRectY);
+      console.log("pointerRectYNow", pointerRectYNow);
+      console.log("pointerRectX", pointerRectX);
+      console.log("pointerRectXNow", pointerRectXNow);
       if (
-        (elemRectY != elemRectYNow || elemRectX != elemRectXNow) &&
-        (pointerRectY != pointerRectYNow || pointerRectX != pointerRectXNow)
+        (elemRectY != elemRectYNow && elemRectX != elemRectXNow) ||
+        (pointerRectY != pointerRectYNow && pointerRectX != pointerRectXNow)
       ) {
         //alert("is different");
         //console.log("is different");
@@ -196,6 +198,7 @@ export default function onLongpress(el, handler) {
       } else {
         //alert("is not different");
         //alert("long click");
+        console.log("long click");
         console.log("is not different");
         el.classList.add("itemselected");
         handler(el); // ejecuta el handler
