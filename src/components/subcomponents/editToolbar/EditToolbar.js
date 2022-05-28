@@ -26,13 +26,13 @@ export default function EditToolbar(props) {
   return visible ? (
     <div className="ItemPreviewPopOutButton">
       <button onClick={editCard} className="float">
-        <i className="bx bx-pencil bx-xs"></i>
+        <i className="bx bx-pencil bx-sm"></i>
       </button>
       <button onClick={backCard} className="float">
-        <i className="bx bx-arrow-back bx-xs"></i>
+        <i className="bx bx-arrow-back bx-sm"></i>
       </button>
       <button onClick={delCard} className="float">
-        <i className="bx bx-trash bx-xs"></i>
+        <i className="bx bx-trash bx-sm"></i>
       </button>
     </div>
   ) : (
